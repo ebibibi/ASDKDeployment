@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 jobs:
-- job: get asdkdownloader
+- job: get_asdkdownloader
   pool: Default
   steps:
   - powershell: |
