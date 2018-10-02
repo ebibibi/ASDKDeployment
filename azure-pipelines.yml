@@ -3,10 +3,9 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-pool:
-  vmImage: 'vs2017-win2016'
-
-steps:
-- powershell: |
-    .\build.ps1 -Verbose
-  displayName: 'Build and Test'
+jobs:
+- job: Get ASDKDownloader
+  pool: Default
+  steps:
+  - powershell: |
+      .\1_getASDKDownloader.ps1 -Verbose
