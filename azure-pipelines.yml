@@ -10,5 +10,5 @@ jobs:
   - powershell: |
       .\1_getASDKDownloader.ps1 -Verbose
   - powershell: |
-      .\2_prepareHost.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
+      .\2_copyCloudBuilder.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
   
