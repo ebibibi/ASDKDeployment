@@ -29,7 +29,7 @@ $jobname = "CloudBuilder Copy Job"
 
 If ($localHash.Hash -ne $remoteHash.Hash) {
     # Copy CloudBuilder.vhdx to ASDK Host
-    $copyjob = Get-Job -Name $jobname
+    $copyjob = Get-Job -Name $jobname -ErrorAction SilentlyContinue
     if($null -eq $copyjob) {
         Write-Output "Kick Job for copying CloudBuilder.vhdx to ASDK Host"
         $copyjob = Start-Job -ScriptBlock {Copy-Item -ToSession $session $localvhdPath -Destination $remoteVHDPath -Verbose} -Name $jobname
