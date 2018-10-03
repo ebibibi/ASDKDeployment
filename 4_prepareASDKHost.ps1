@@ -6,7 +6,27 @@ Param(
 $password = ConvertTo-SecureString -String $ASDKAdminUserPassword -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ASDKAdminUserName, $password
 
+
 # Wait for reboot
+$hostname = $null
+$session = $null
+while($null -eq $session) {
+    $session = New-PSSession -Credential $credential -ComputerName $env:ASDKHostIP -ErrorAction SilentlyContinue
+    if($null -ne $session) {
+        $hostname = Invoke-Command -Session $session -ScriptBlock {hostname}
+    }
+    
+    if($hostname -ne $env:ASDKHostPhysicalName) {
+        $session | Remove-PSSession
+        $session = $null
+    }
+
+    Write-Output "Waiting for server reboot. Sleep more 30 sec."
+    Start-Sleep 30
+}
+
+Write-Output "Connected to $hostname !!!"
+
 
 
 #If (Test-Path "C:\CloudBuilder.vhdx") {
