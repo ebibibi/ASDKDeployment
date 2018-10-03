@@ -10,4 +10,5 @@ Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($down
 
 Write-Output ($env:ASDKAdminUserName)
 Write-Output ($env:ASDKAdminUserPassword)
+$env:ASDKAdminUserPassword | Get-Member
 
