@@ -8,6 +8,8 @@ If (!(Test-Path $downloaderPath)) {
 
 Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($downloaderPath + $filename) -Verbose
 
+Write-Output "Write-Output"
+Write-Host "Write-Host"
 Write-Host ($env:ASDKAdminUserName)
 Write-Output ($env:ASDKAdminUserName)
 
