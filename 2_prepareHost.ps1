@@ -2,10 +2,14 @@ Param(
  [String]$ASDKAdminUserPassword
 )
 
+Write-Output $ASDKAdminUserPassword
+
 # Copy CloudBuilder.vhdx to Host root
 $password = ConvertTo-SecureString -String $ASDKAdminUserPassword -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ASDKAdminUserName, $password
-$session = New-PSSession $env:ASDKHostIP -Credential $credential
+$session = New-PSSession $env:ASDKHostIP -Credential $credential -Verbose
+$session
+
 Copy-Item -ToSession $session C:\test.txt -Destination C:\test.txt
 
 
