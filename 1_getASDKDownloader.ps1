@@ -1,5 +1,5 @@
 Param(
- [String]$ASDKAdminUserPassword
+ [SecureString]$ASDKAdminUserPassword
 )
 
 
@@ -13,5 +13,10 @@ Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($down
 
 Write-Output ($env:ASDKAdminUserName)
 Write-Output ($ASDKAdminUserPassword)
+
+$Ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToCoTaskMemUnicode($ASDKAdminUserPassword)
+$result = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($Ptr)
+[System.Runtime.InteropServices.Marshal]::ZeroFreeCoTaskMemUnicode($Ptr)
+$result
 
 
