@@ -4,8 +4,11 @@
 # https://aka.ms/yaml
 
 jobs:
-- job: get_asdkdownloader
+- job: deploy_ASDK
   pool: Default
   steps:
   - powershell: |
-      .\1_getASDKDownloader.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
+      .\1_getASDKDownloader.ps1 -Verbose
+  - powershell: |
+      .\2_prepareHost.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
+  
