@@ -1,4 +1,7 @@
-# https://docs.microsoft.com/ja-jp/azure/azure-stack/azure-stack-deploy-overview
+Param(
+ [String]$ASDKAdminUserPassword
+)
+
 
 $downloaderPath = "C:/ASDK/"
 $filename = "azurestackdevkitdownloader.exe"
@@ -9,6 +12,6 @@ If (!(Test-Path $downloaderPath)) {
 Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($downloaderPath + $filename) -Verbose
 
 Write-Output ($env:ASDKAdminUserName)
-Write-Output ($env:ASDKAdminUserPassword)
-$env:ASDKAdminUserPassword | Get-Member
+Write-Output ($ASDKAdminUserPassword)
+
 

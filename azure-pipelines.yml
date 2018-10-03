@@ -8,4 +8,4 @@ jobs:
   pool: Default
   steps:
   - powershell: |
-      .\1_getASDKDownloader.ps1 -Verbose
+      .\1_getASDKDownloader.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
