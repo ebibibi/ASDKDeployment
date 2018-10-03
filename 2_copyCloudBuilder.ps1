@@ -25,23 +25,18 @@ Write-Output $localHash.Hash
 Write-Output "remotehash"
 Write-Output $remoteHash.Hash
 
-$jobname = "CloudBuilder Copy Job"
+$sessionname = "CloudBuilder Copy Session"
 
 If ($localHash.Hash -ne $remoteHash.Hash) {
     # Copy CloudBuilder.vhdx to ASDK Host
-    $copyjob = Get-Job -Name $jobname -ErrorAction SilentlyContinue
-    if($null -eq $copyjob) {
-        Write-Output "Kick Job for copying CloudBuilder.vhdx to ASDK Host"
-        $copyjob = Start-Job -ScriptBlock {Copy-Item -ToSession $using:session $using:localvhdPath -Destination $using:remoteVHDPath -Force -Verbose} -Name $jobname
+    $copysession = Get-PSSession -Name $sessionname -ErrorAction SilentlyContinue
+    if($null -eq $coppysession) {
+        $copysession = New-PSSession (hostname)
     }
-    
 
-    # Wait for finish
-    while(!($copyjob.Finished))
-    {
-        Write-Output "Waiting for finish copy CloudBuilder.vhdx"
-        Start-Sleep -Seconds 60
-    }
+    Write-Output "Kick Job for copying CloudBuilder.vhdx to ASDK Host"
+    Invoke-Command $copysession -ScriptBlock {Copy-Item -ToSession $using:session $using:localvhdPath -Destination $using:remoteVHDPath -Force -Verbose} 
+
 } else {
     Write-Output "Copying CloudBuilder.vhd is canceled because Hash value is same(already copied)."
 }
