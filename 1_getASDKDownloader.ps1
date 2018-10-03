@@ -7,3 +7,5 @@ If (!(Test-Path $downloaderPath)) {
 }
 
 Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($downloaderPath + $filename) -Verbose
+
+#test
