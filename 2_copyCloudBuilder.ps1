@@ -15,9 +15,9 @@ $localVHDPath = "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx"
 $remoteVHDPath = "D:\ASDK\CloudBuilder.vhdx"
 
 Write-Output "Get hash value of local file."
-$localHash = Get-FileHash $localVHDPath -Verbose
+$localHash = Get-FileHash $localVHDPath -Algorithm MD5 -Verbose
 Write-Output "Get hash value of remote file."
-$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath -Verbose}
+$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath -Algorithm MD5 -Verbose}
 
 Write-Output "localhash"
 Write-Output $localHash.Hash
