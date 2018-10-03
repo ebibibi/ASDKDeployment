@@ -42,10 +42,7 @@ Write-Output $remoteHash.Hash
         }        
     }
 
-    if (-not (Test-Path z:\)) {
-        New-PSDrive -Name z -PSProvider FileSystem -Root \\$env:ASDKHostIP\$remoteShareName -Credential $credential -Persist
-    }
-
+    Get-PSDrive z -ErrorAction SilentlyContinue| Remove-PSDrive -ErrorAction SilentlyContinue
     New-PSDrive -Name z -PSProvider FileSystem -Root \\$env:ASDKHostIP\$remoteShareName -Credential $credential -Persist
     $scriptblock = {robocopy $localVHDFolderPath z:\ *.vhdx /r:1 /w:1 /z }
     . $scriptblock
