@@ -10,8 +10,37 @@ $credential = New-Object -TypeName System.Management.Automation.PSCredential -Ar
 $session = New-PSSession $env:ASDKHostIP -Credential $credential -Verbose
 $session
 
-# Copy CloudBuilder.vhdx to ASDK Host
-Write-Verbose "Copy CloudBuilder.vhdx to Host"
-Copy-Item -ToSession $session "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx" -Destination "D:\ASDK\CloudBuilder.vhdx" -
+# Compare file hash
+$localVHDPath = "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx"
+$remoteVHDPath = "D:\ASDK\CloudBuilder.vhdx"
+
+$localHash = Get-FileHash $localVHDPath
+$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath }
+
+Write-Output "localhash"
+Write-Output $localHash.Hash
+
+Write-Output "remotehash"
+Write-Output $remoteHash.Hash
+
+$jobname = "CloudBuilder Copy Job"
+
+If ($localHash.Hash -ne $remoteHash.Hash) {
+    # Copy CloudBuilder.vhdx to ASDK Host
+    $copyjob = Get-Job -Name $jobname
+    if($null -eq $copyjob) {
+        Write-Output "Kick Job for copying CloudBuilder.vhdx to ASDK Host"
+        $copyjob = Start-Job -ScriptBlock {Copy-Item -ToSession $session $localvhdPath -Destination $remoteVHDPath -Verbose} -Name $jobname
+    }
+
+    # Wait for finish
+    while(!($copyjob.Finished))
+    {
+        Write-Output "Waiting for finish copy CloudBuilder.vhdx"
+        Start-Sleep -Seconds 60
+    }
+} else {
+    Write-Output "Copying CloudBuilder.vhd is canceled because Hash value is same(already copied)."
+}
 
 $session | Remove-PSSession
