@@ -1,19 +1,23 @@
 Param(
  [String]$ASDKAdminUserPassword
 )
-
-Write-Output $ASDKAdminUserPassword
-
 # Open remote session to ASDK Host
-$password = ConvertTo-SecureString -String $ASDKAdminUserPassword -AsPlainText -Force
-$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ASDKAdminUserName, $password
-$session = New-PSSession $env:ASDKHostIP -Credential $credential -Verbose
-$session
+$sessionname = "CloudBuilder Copy Session"
+$session = Get-PSSession -Name $sessionname -ErrorAction SilentlyContinue
 
-# Compare file hash
+if($null -eq $session) {
+    $password = ConvertTo-SecureString -String $ASDKAdminUserPassword -AsPlainText -Force
+    $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ASDKAdminUserName, $password
+    $session = New-PSSession $env:ASDKHostIP -Credential $credential -Name $sessionname -Verbose
+    $session    
+}
+
+
 $localVHDPath = "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx"
+$localVHDFolderPath = "C:\ASDK\AzureStackDevelopmentKit"
 $remoteVHDPath = "D:\ASDK\CloudBuilder.vhdx"
 
+# Compare file hash
 Write-Output "Get hash value of local file."
 $localHash = Get-FileHash $localVHDPath -Algorithm MD5 -Verbose
 Write-Output "Get hash value of remote file."
@@ -25,17 +29,13 @@ Write-Output $localHash.Hash
 Write-Output "remotehash"
 Write-Output $remoteHash.Hash
 
-$sessionname = "CloudBuilder Copy Session"
 
 If ($localHash.Hash -ne $remoteHash.Hash) {
     # Copy CloudBuilder.vhdx to ASDK Host
-    $copysession = Get-PSSession -Name $sessionname -ErrorAction SilentlyContinue
-    if($null -eq $coppysession) {
-        $copysession = New-PSSession (hostname)
-    }
-
-    Write-Output "Kick Job for copying CloudBuilder.vhdx to ASDK Host"
-    Invoke-Command $copysession -ScriptBlock {Copy-Item -ToSession $using:session $using:localvhdPath -Destination $using:remoteVHDPath -Force -Verbose} 
+    Write-Output "robocopy CloudBuilder.vhdx to ASDK Host"
+    New-PSDrive -Name z -PSProvider FileSystem -Root \\$env:ASDKHostIP\$remoteShareName -Credential $credential -Persist
+    $scriptblock = {robocopy $localVHDFolderPath z:\ *.vhdx /r:1 /w:1 /z }
+    . $scriptblock
 
 } else {
     Write-Output "Copying CloudBuilder.vhd is canceled because Hash value is same(already copied)."
