@@ -33,7 +33,9 @@ Write-Output $remoteHash.Hash
 If ($localHash.Hash -ne $remoteHash.Hash) {
     # Copy CloudBuilder.vhdx to ASDK Host
     Write-Output "robocopy CloudBuilder.vhdx to ASDK Host"
-    New-PSDrive -Name z -PSProvider FileSystem -Root \\$env:ASDKHostIP\$remoteShareName -Credential $credential -Persist
+    if (-not (Test-Path z:)) {
+        New-PSDrive -Name z -PSProvider FileSystem -Root \\$env:ASDKHostIP\$remoteShareName -Credential $credential -Persist
+    }
     $scriptblock = {robocopy $localVHDFolderPath z:\ *.vhdx /r:1 /w:1 /z }
     . $scriptblock
 
