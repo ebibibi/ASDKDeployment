@@ -21,9 +21,9 @@ $remoteShareName = "ASDK"
 
 # Compare file hash
 Write-Output "Get hash value of local file."
-#$localHash = Get-FileHash $localVHDPath -Algorithm MD5 -Verbose
+$localHash = Get-FileHash $localVHDPath -Algorithm MD5 -Verbose
 Write-Output "Get hash value of remote file."
-#$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath -Algorithm MD5 -Verbose}
+$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath -Algorithm MD5 -Verbose}
 
 Write-Output "localhash"
 Write-Output $localHash.Hash
@@ -32,7 +32,7 @@ Write-Output "remotehash"
 Write-Output $remoteHash.Hash
 
 
-#If ($localHash.Hash -ne $remoteHash.Hash) {
+If ($localHash.Hash -ne $remoteHash.Hash) {
     # Copy CloudBuilder.vhdx to ASDK Host
     Write-Output "robocopy CloudBuilder.vhdx to ASDK Host"
     Invoke-Command $session -ScriptBlock {
@@ -47,8 +47,8 @@ Write-Output $remoteHash.Hash
     $scriptblock = {robocopy $localVHDFolderPath z:\ *.vhdx /r:1 /w:1 /z }
     . $scriptblock
 
-#} else {
-#    Write-Output "Copying CloudBuilder.vhd is canceled because Hash value is same(already copied)."
-#}
+} else {
+    Write-Output "Copying CloudBuilder.vhd is canceled because Hash value is same(already copied)."
+}
 
 $session | Remove-PSSession
