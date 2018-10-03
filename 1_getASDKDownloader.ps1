@@ -2,4 +2,5 @@
 
 [System.IO.Path]::GetTempPath() | Tee-Object  -Variable installerPath
 $installer = ($installerPath + "AzureStackDownloader.exe")
-Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile $installer
+Write-Verbose "Installer path : $installer"
+Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile $installer -Verbose
