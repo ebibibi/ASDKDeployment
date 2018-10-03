@@ -10,7 +10,19 @@ $credential = New-Object -TypeName System.Management.Automation.PSCredential -Ar
 $session = New-PSSession $env:ASDKHostIP -Credential $credential -Verbose
 $session
 
-# Copy CloudBuilder.vhdx to ASDK Host
-Copy-Item -ToSession $session "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx" -Destination "D:\ASDK\CloudBuilder.vhdx"
+# Compare file hash
+$localVHDPath = "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx"
+$remoteVHDPath = "D:\ASDK\CloudBuilder.vhdx"
 
+$localHash = Get-FileHash $localVHDPath
+$remoteHash = Invoke-command -Session $session -scriptblock { Get-FileHash $using:remoteVHDPath }
+
+If ($localHash.Hash -ne $remoteHash.Hash) {
+  # Copy CloudBuilder.vhdx to ASDK Host
+  Write-Verbose "Copy CloudBuilder.vhdx to ASDK Host"
+  Copy-Item -ToSession $session $localvhd -Destination $remoteVHDPath
+  } else {
+    Write-Verbose "Copying CloudBuilder.vhd is canceled because Hash value is same."
+    }
+  
 $session | Remove-PSSession
