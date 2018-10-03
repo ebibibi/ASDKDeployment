@@ -2,9 +2,6 @@ Param(
  [String]$ASDKAdminUserPassword
 )
 
-# Add to the TrustedHosts
-Set-Item -Path WSMan:\localhost\Client\TrustedHosts -Value $($env:ASDKHostIP) -force
-
 # Copy CloudBuilder.vhdx to Host root
 $password = ConvertTo-SecureString -String $ASDKAdminUserPassword -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ASDKAdminUserName, $password
