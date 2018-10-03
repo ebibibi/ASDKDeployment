@@ -10,5 +10,7 @@ jobs:
   - powershell: .\1_getASDKDownloader.ps1 -Verbose
     displayName:  Get ASDK Downloader
   - powershell: .\2_copyCloudBuilder.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
-    displayName:  Copy CloudBUilder.vhdx to the Host 
+    displayName:  Copy CloudBUilder.vhdx to the Host
+  - powershell: .\3_changeBootDevice.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
+    displayName:  Change Boot Device to Physical Disks
   
