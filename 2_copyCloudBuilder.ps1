@@ -11,6 +11,7 @@ $session = New-PSSession $env:ASDKHostIP -Credential $credential -Verbose
 $session
 
 # Copy CloudBuilder.vhdx to ASDK Host
-Copy-Item -ToSession $session "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx" -Destination "D:\ASDK\CloudBuilder.vhdx"
+Write-Verbose "Copy CloudBuilder.vhdx to Host"
+Copy-Item -ToSession $session "C:\ASDK\AzureStackDevelopmentKit\CloudBuilder.vhdx" -Destination "D:\ASDK\CloudBuilder.vhdx" -
 
 $session | Remove-PSSession
