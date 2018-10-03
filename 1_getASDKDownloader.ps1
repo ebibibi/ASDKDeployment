@@ -10,3 +10,4 @@ Invoke-WebRequest -Uri https://aka.ms/azurestackdevkitdownloader -OutFile ($down
 
 Write-Host ($env:ASDKAdminUserName)
 Write-Output ($env:ASDKAdminUserName)
+
