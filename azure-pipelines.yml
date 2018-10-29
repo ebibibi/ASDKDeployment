@@ -13,6 +13,6 @@ jobs:
 #    displayName:  Copy CloudBUilder.vhdx to the Host
 #  - powershell: .\3_changeBootDevicetoPhysicalDisks.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
 #    displayName:  Change Boot Device to Physical Disks
-  - powershell: .\4_prepareASDKHost.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
-    displayName:  preparing ASDKHost
+#  - powershell: .\4_prepareASDKHost.ps1 -ASDKAdminUserPassword $(ASDKAdminUserPassword) -Verbose
+#    displayName:  preparing ASDKHost
   
